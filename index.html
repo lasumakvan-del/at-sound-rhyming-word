@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Family Flashcard - "at" Words</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #2575fc;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #6a11cb;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #36D1DC, #5B86E5);
+            border-radius: 20px;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .spiral-holes {
+            position: absolute;
+            top: -15px;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 25px,
+                rgba(255, 255, 255, 0.9) 25px,
+                rgba(255, 255, 255, 0.9) 35px
+            );
+            border-radius: 20px 20px 0 0;
+            z-index: 2;
+        }
+
+        .card-header {
+            background: white;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            margin-bottom: 15px;
+            position: relative;
+            margin-top: 15px;
+        }
+
+        .header-icon-container {
+            position: relative;
+            width: 60px;
+            height: 50px;
+            perspective: 300px;
+        }
+
+        .header-icon {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #FF9F7C;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            transition: transform 0.6s;
+            backface-visibility: hidden;
+        }
+
+        .header-icon.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .pronounce-btn {
+            background: #5B86E5;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .pronounce-btn:hover {
+            background: #2575fc;
+            transform: scale(1.1);
+        }
+
+        .card-main {
+            background: white;
+            height: 160px;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        .main-word {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-letter-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin-right: 8px;
+            perspective: 600px;
+        }
+
+        .main-letter {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 72px;
+            font-weight: bold;
+            color: #d32f2f;
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            border-radius: 15px;
+            transition: transform 0.6s;
+            backface-visibility: hidden;
+        }
+
+        .main-letter.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .main-ending {
+            font-size: 72px;
+            font-weight: bold;
+            color: #36D1DC;
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            color: #36D1DC;
+            font-weight: bold;
+        }
+
+        .page-flip-sound {
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: white;
+            pointer-events: none;
+            animation: flipSound 0.6s ease-out;
+        }
+
+        @keyframes flipSound {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .progress {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #5B86E5;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .flashcard {
+                height: 250px;
+            }
+            
+            .main-letter, .main-ending {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Word Family Flashcard</h1>
+            <p class="subtitle">Learn words ending with "at"</p>
+        </header>
+        
+        <div class="flashcard" onclick="flipLetter()">
+            <div class="spiral-holes"></div>
+            <div class="card-header">
+                <div class="header-icon-container">
+                    <div class="header-icon" id="header-icon-current">🐭</div>
+                    <div class="header-icon flipped" id="header-icon-next">🐱</div>
+                </div>
+                <button class="pronounce-btn" onclick="speakWord(event)">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+            </div>
+            <div class="card-main">
+                <div class="main-word">
+                    <div class="main-letter-container">
+                        <div class="main-letter" id="main-current">R</div>
+                        <div class="main-letter flipped" id="main-next">C</div>
+                    </div>
+                    <div class="main-ending">at</div>
+                </div>
+            </div>
+            <div class="click-hint">Click to flip</div>
+            <div class="page-flip-sound" id="flip-indicator">📖</div>
+        </div>
+        
+        <div class="progress">
+            <span id="current-index">1</span>/<span id="total-words">8</span> words
+        </div>
+        
+        <footer>
+            <p>Word Family Flashcard App &copy; 2023</p>
+        </footer>
+    </div>
+
+    <script>
+        const wordData = [
+            { letter: 'R', icon: '🐭', word: 'Rat' }, 
+            { letter: 'C', icon: '🐱', word: 'Cat' },  
+            { letter: 'B', icon: '🦇', word: 'Bat' }, 
+            { letter: 'H', icon: '🎩', word: 'Hat' }, 
+            { letter: 'M', icon: '🧘', word: 'Mat' }, 
+            { letter: 'P', icon: '✋', word: 'Pat' }, 
+            { letter: 'S', icon: '🪑', word: 'Sat' }, 
+            { letter: 'F', icon: '🍔', word: 'Fat' } 
+        ];
+        
+        let currentIndex = 0;
+        let isFlipping = false;
+
+        function flipLetter() {
+            if (isFlipping) return;
+            
+            isFlipping = true;
+            
+            // Show flip indicator
+            const flipIndicator = document.getElementById('flip-indicator');
+            flipIndicator.style.animation = 'none';
+            setTimeout(() => {
+                flipIndicator.style.animation = 'flipSound 0.6s ease-out';
+            }, 10);
+            
+            // Get all elements
+            const headerIconCurrent = document.getElementById('header-icon-current');
+            const headerIconNext = document.getElementById('header-icon-next');
+            const mainCurrent = document.getElementById('main-current');
+            const mainNext = document.getElementById('main-next');
+            
+            // Start flip animation
+            headerIconCurrent.classList.add('flipped');
+            headerIconNext.classList.remove('flipped');
+            mainCurrent.classList.add('flipped');
+            mainNext.classList.remove('flipped');
+            
+            // Update to next word after animation
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % wordData.length;
+                const nextIndex = (currentIndex + 1) % wordData.length;
+                
+                // Update content
+                headerIconCurrent.textContent = wordData[currentIndex].icon;
+                headerIconNext.textContent = wordData[nextIndex].icon;
+                mainCurrent.textContent = wordData[currentIndex].letter;
+                mainNext.textContent = wordData[nextIndex].letter;
+                
+                // Update progress
+                document.getElementById('current-index').textContent = currentIndex + 1;
+                
+                // Reset flip states
+                headerIconCurrent.classList.remove('flipped');
+                headerIconNext.classList.add('flipped');
+                mainCurrent.classList.remove('flipped');
+                mainNext.classList.add('flipped');
+                
+                isFlipping = false;
+            }, 300);
+        }
+        
+        function speakWord(event) {
+            // Prevent the click event from bubbling up to the flashcard
+            event.stopPropagation();
+            
+            const word = wordData[currentIndex].word;
+            const utterance = new SpeechSynthesisUtterance(word);
+            utterance.rate = 0.8; // Slower speed for clarity
+            speechSynthesis.speak(utterance);
+        }
+        
+        // Initialize total words count
+        document.getElementById('total-words').textContent = wordData.length;
+    </script>
+</body>
+</html>
